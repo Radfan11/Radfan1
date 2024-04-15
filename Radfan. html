@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة العقارات</title>
+    <!-- تضمين مكتبة Leaflet.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+    <style>
+        /* تنسيقات CSS لواجهة المستخدم */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            height: 600px;
+            margin-bottom: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .property-list {
+            list-style-type: none;
+            padding: 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .property-item {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .property-item:hover {
+            background-color: #eaeaea;
+        }
+        .btn-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .btn {
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body onload="initMap()">
+    <div class="container">
+        <h1>نظام إدارة العقارات</h1>
+        <div class="btn-container">
+              
+        </div></div></div>
+        </div>
+        <div id="map"></div>
+        <ul class="property-list" id="propertyList">
+            <li class="property-item" data-title="شقة الدكتور بن هويش" data-lat="12.8082" data-lng="45.0273">شقة 1</li>
+            <li class="property-item" data-title="شقة المهندس ردفان الكلدي" data-lat="12.8057" data-lng="45.0315">شقة 2</li>
+            <li class="property-item" data-title="شقة المهندس ثابت الحبيري " data-lat="12.8046" data-lng="45.0298">شقة 3</li>
+            <li class="property-item" data-title="شقة 4" data-lat="12.8065" data-lng="45.0267">شقة 4</li>
+            <li class="property-item" data-title="شقة 5" data-lat="12.8092" data-lng="45.0331">شقة 5</li>
+            <li class="property-item" data-title="فيلا 1" data-lat="12.7791" data-lng="45.0204">فيلا 1</li>
+            <li class="property-item" data-title="فيلا 2" data-lat="12.7746" data-lng="45.0229">فيلا 2</li>
+            <li class="property-item" data-title="فيلا 3" data-lat="12.7813" data-lng="45.0282">فيلا 3</li>
+            <li class="property-item" data-title="فيلا 4" data-lat="12.7779" data-lng="45.0351">فيلا 4</li>
+            <li class="property-item" data-title="فيلا 5" data-lat="12.7829" data-lng="45.0300">فيلا 5</li>
+        </ul>
+    </div>
+
+    <!-- كود JavaScript -->
+    <script>
+        var map;
+        var markers = [];
+
+        function initMap() {
+            map = L.map('map').setView([12.8082, 45.0273], 13); // تعيين مركز الخريطة ومستوى التكبير الافتراضي
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            showMarkers();
+        }
+
+        function showMarkers() {
+            var apartments = document.querySelectorAll('.property-item[data-title^="شقة"]');
+            var villas = document.querySelectorAll('.property-item[data-title^="فيلا"]');
+
+            apartments.forEach(function(apartment) {
+                var title = apartment.getAttribute('data-title');
+                var lat = parseFloat(apartment.getAttribute('data-lat'));
+                var lng = parseFloat(apartment.getAttribute('data-lng'));
+
+                var marker = L.marker([lat, lng]).addTo(map);
+                marker.bindTooltip(title).openTooltip(); // عرض اسم الشقة كـ tooltip
+                markers.push(marker);
+            });
+
+            villas.forEach(function(villa) {
+                var title = villa.getAttribute('data-title');
+                var lat = parseFloat(villa.getAttribute('data-lat'));
+                var lng = parseFloat(villa.getAttribute('data-lng'));
+
+              //  var marker = L.marker([lat,
+              
+             var marker = L.marker([lat, lng]).addTo(map);
+                marker.bindTooltip(title).openTooltip(); // عرض اسم الفيلا كـ tooltip
+                markers.push(marker);
+            });
+        }
+
+        function showApartments() {
+            map.setView([12.8082, 45.0273], 13);
+            markers.forEach(function(marker) {
+                if (marker.options.title.startsWith("شقة تلدكتور محمد بن هويش")) {
+                    marker.addTo(map).bindTooltip(marker.options.title).openTooltip();
+                } else {
+                    map.removeLayer(marker);
+                }
+            });
+        }
+
+        function showVillas() {
+            map.setView([12.7791, 45.0204], 13);
+            markers.forEach(function(marker) {
+                if (marker.options.title.startsWith("فيلا")) {
+                    marker.addTo(map).bindTooltip(marker.options.title).openTooltip();
+                } else {
+                    map.removeLayer(marker);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+              
